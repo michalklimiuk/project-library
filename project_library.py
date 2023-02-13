@@ -20,7 +20,22 @@ def log_in():
             continue
 
 def add_book():
-    book_id = len(books)
+    with open("books.txt") as file_books:
+        for line in file_books:
+            pass
+        last_line_books = line
+
+    with open("borrowed.txt") as file_borrowed:
+        for line in file_borrowed:
+            pass
+        last_line_borrowed = line
+
+    if last_line_borrowed[0] > last_line_books[0]:
+        book_id = int(last_line_borrowed[0])
+
+    if last_line_borrowed[0] < last_line_books[0]:
+        book_id = int(last_line_books[0])
+
     author = str(input("Enter author's name: "))
     name = str(input("Enter book's name: "))
     
