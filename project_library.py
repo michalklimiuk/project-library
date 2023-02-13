@@ -38,12 +38,13 @@ def add_book():
 
     author = str(input("Enter author's name: "))
     name = str(input("Enter book's name: "))
-    
+
     book_id += 1
     book = (f'{book_id} - Author: {author} - Title: {name}')
     
     books.append(book)
     print(f"Book added to library")
+    save_books_to_file()
 
 def show_books():
     print("Books in library: ", books)
@@ -54,22 +55,30 @@ def show_borrowed_books():
 def remove_book():
     print(books)
     book_to_remove_id = int(input("Enter ID of book to remove: "))
-    books.remove(books[book_to_remove_id - 1])
+
+    result = ''.join([element for element in books if element.startswith(f'{book_to_remove_id}')])
+    books.remove(result)
+
     print(f"Book removed from library")
 
 def borrow_book():
     show_books()
     book_to_borrow_id = int(input("Enter ID of book to borrow: "))
-    borrowed_books.append(books[book_to_borrow_id - 1])
-    books.remove(books[book_to_borrow_id - 1])
+
+    result = ''.join([element for element in books if element.startswith(f'{book_to_borrow_id}')])
+    
+    borrowed_books.append(result)
+    books.remove(result)
     
     print(f"Book borrowed from library")
 
 def return_book():
     show_borrowed_books()
     book_to_remove_id = int(input("Enter ID of book to return to library: "))
-    books.append(borrowed_books[book_to_remove_id - 1])
-    borrowed_books.remove(borrowed_books[book_to_remove_id - 1])
+
+    result = ''.join([element for element in borrowed_books if element.startswith(f'{book_to_remove_id}')])
+    books.append(result)
+    borrowed_books.remove(result)
     
     print(f"Book removed from library")
 
@@ -81,9 +90,10 @@ def load_books_from_file():
             books.append(line.strip())
 
         file.close()
+
     except FileNotFoundError:
         return
-
+    
 def load_borrowed_from_file():
     try:
         file = open("borrowed.txt")
@@ -94,7 +104,7 @@ def load_borrowed_from_file():
         file.close()
     except FileNotFoundError:
         return
-
+    
 def save_books_to_file():
     file = open("books.txt", "w")
     for book in books:
@@ -131,8 +141,8 @@ while True:
     print("-----------------------------------")
 
     choice = int(input("What do you want to do?: "))
-    
 
+    
     if choice == 1:
         show_books()
         print("-----------------------------------")
