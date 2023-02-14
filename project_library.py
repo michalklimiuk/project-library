@@ -54,33 +54,53 @@ def show_borrowed_books():
 
 def remove_book():
     print(books)
-    book_to_remove_id = int(input("Enter ID of book to remove: "))
-
-    result = ''.join([element for element in books if element.startswith(f'{book_to_remove_id}')])
-    books.remove(result)
-
+    
+    while True:
+        try:
+            book_to_remove_id = int(input("Enter ID of book to remove: "))
+            result = ''.join([element for element in books if element.startswith(f'{book_to_remove_id}')])
+            books.remove(result)
+            break
+        except ValueError:
+            print("Enter correct value.")
+            continue
+        
     print(f"Book removed from library")
 
 def borrow_book():
     show_books()
-    book_to_borrow_id = int(input("Enter ID of book to borrow: "))
 
-    result = ''.join([element for element in books if element.startswith(f'{book_to_borrow_id}')])
+    while True:
+        try:
+            book_to_borrow_id = int(input("Enter ID of book to borrow: "))
+
+            result = ''.join([element for element in books if element.startswith(f'{book_to_borrow_id}')])
     
-    borrowed_books.append(result)
-    books.remove(result)
-    
+            borrowed_books.append(result)
+            books.remove(result)
+            break
+        except ValueError:
+            print("Enter correct value.")
+            continue
+
     print(f"Book borrowed from library")
 
 def return_book():
     show_borrowed_books()
-    book_to_remove_id = int(input("Enter ID of book to return to library: "))
-
-    result = ''.join([element for element in borrowed_books if element.startswith(f'{book_to_remove_id}')])
-    books.append(result)
-    borrowed_books.remove(result)
     
-    print(f"Book removed from library")
+    while True:
+        try:
+            book_to_remove_id = int(input("Enter ID of book to return to library: "))
+
+            result = ''.join([element for element in borrowed_books if element.startswith(f'{book_to_remove_id}')])
+            books.append(result)
+            borrowed_books.remove(result)
+            break
+        except ValueError:
+            print("Enter correct value.")
+            continue
+
+    print(f"Book returned from library")
 
 def load_books_from_file():
     try:
