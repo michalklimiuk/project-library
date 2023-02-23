@@ -1,4 +1,5 @@
 import getpass
+import sys
 
 books = []
 book_id = 0
@@ -104,26 +105,29 @@ def return_book():
 
 def load_books_from_file():
     try:
-        file = open("books.txt")
+        file = open("books.txt", 'w+')
 
         for line in file.readlines():
             books.append(line.strip())
 
         file.close()
 
-    except FileNotFoundError:
-        return
+    except FileNotFoundError as e:
+        print("Create a file first", e)
+        sys.exit(1)
     
 def load_borrowed_from_file():
     try:
-        file = open("borrowed.txt")
+        file = open("borrowed.txt", 'w+')
 
         for line in file.readlines():
             borrowed_books.append(line.strip())
 
         file.close()
-    except FileNotFoundError:
-        return
+    except FileNotFoundError as e:
+        print("Create a file first", e)
+        sys.exit(1)
+        
     
 def save_books_to_file():
     file = open("books.txt", "w")
