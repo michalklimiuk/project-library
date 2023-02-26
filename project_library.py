@@ -1,8 +1,8 @@
 import getpass
 import sys
+import os
 
 books = []
-book_id = 0
 borrowed_books = []
 
 def log_in():
@@ -21,21 +21,33 @@ def log_in():
             continue
 
 def add_book():
-    with open("books.txt") as file_books:
-        for line in file_books:
-            pass
-        last_line_books = line
+    if os.stat("books.txt").st_size == 0 and os.stat("borrowed.txt").st_size == 0:
+        book_id = 0
+    
+    elif os.stat("books.txt").st_size == 0 and os.stat("borrowed.txt").st_size != 0:
+        with open("borrowed.txt") as file_borrowed:
+            last_line_borrowed = file_borrowed.readlines()[-1]
+            book_id = int(last_line_borrowed[0])
 
-    with open("borrowed.txt") as file_borrowed:
-        for line in file_borrowed:
-            pass
-        last_line_borrowed = line
+    elif os.stat("books.txt").st_size != 0 and os.stat("borrowed.txt").st_size == 0:
+        with open("books.txt") as file_books:
+            last_line_books = file_books.readlines()[-1]
+            book_id = int(last_line_books[0])
+        
+    else:
+        with open("borrowed.txt") as file_borrowed:
+            last_line_borrowed = file_borrowed.readlines()[-1]
+            print(last_line_borrowed)
+        
+        with open("books.txt") as file_books:
+            last_line_books = file_books.readlines()[-1]
+            print(last_line_books)
 
-    if last_line_borrowed[0] > last_line_books[0]:
-        book_id = int(last_line_borrowed[0])
+        if last_line_borrowed[0] > last_line_books[0]:
+            book_id = int(last_line_borrowed[0])
 
-    if last_line_borrowed[0] < last_line_books[0]:
-        book_id = int(last_line_books[0])
+        if last_line_borrowed[0] < last_line_books[0]:
+            book_id = int(last_line_books[0])
 
     author = str(input("Enter author's name: "))
     name = str(input("Enter book's name: "))
@@ -66,7 +78,8 @@ def remove_book():
             print("Enter correct value.")
             continue
         
-    print(f"Book removed from library")
+    print("Book removed from library")
+    save_books_to_file()
 
 def borrow_book():
     show_books()
@@ -84,7 +97,9 @@ def borrow_book():
             print("Enter correct value.")
             continue
 
-    print(f"Book borrowed from library")
+    print("Book borrowed from library")
+    save_books_to_file()
+    save_borrowed_to_file()
 
 def return_book():
     show_borrowed_books()
@@ -101,11 +116,13 @@ def return_book():
             print("Enter correct value.")
             continue
 
-    print(f"Book returned from library")
+    print("Book returned from library")
+    save_books_to_file()
+    save_borrowed_to_file()
 
 def load_books_from_file():
     try:
-        file = open("books.txt", 'w+')
+        file = open("books.txt", 'r')
 
         for line in file.readlines():
             books.append(line.strip())
@@ -118,7 +135,7 @@ def load_books_from_file():
     
 def load_borrowed_from_file():
     try:
-        file = open("borrowed.txt", 'w+')
+        file = open("borrowed.txt", 'r')
 
         for line in file.readlines():
             borrowed_books.append(line.strip())
@@ -127,8 +144,7 @@ def load_borrowed_from_file():
     except FileNotFoundError as e:
         print("Create a file first", e)
         sys.exit(1)
-        
-    
+           
 def save_books_to_file():
     file = open("books.txt", "w")
     for book in books:
@@ -144,8 +160,8 @@ def save_borrowed_to_file():
 print("-----------------------------------")
 print("Welcome to YourPrivateLibrary")
 print("-----------------------------------")
-# log_in()
-# print("-----------------------------------")
+log_in()
+print("-----------------------------------")
 
 load_books_from_file()
 load_borrowed_from_file()
